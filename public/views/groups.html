@@ -1,0 +1,160 @@
+<div class="typeContainer" ng-init="init()">
+    <div id="error-placement" ng-show="errorMessage || alertHide == false" ng-hide="alertHide || errorMessage == ''" ng-class="{'alert alert-danger col-sm-6 col-sm-offset-3 animated fadeOut': alertHide == true, 'alert alert-danger col-sm-6 col-sm-offset-3 animated fadeIn': alertHide == false || errorMessage}" style="text-align:center">{{errorMessage}}
+    </div>
+    <div class="horizontalCenter col-md-12">
+        <button class="btn primaryColor" data-toggle="modal" data-target="#addNewGroup">
+            Add Group
+        </button>
+        <button class="btn primaryColor" ng-click="showAnalytics()">
+            Analytics
+        </button>
+        <button class="btn primaryColor" ng-click="showCampaigns()">
+            Campaign
+        </button>
+        <button class="btn primaryColor" data-toggle="modal" data-target="#sendNotification">
+            Send Notification
+        </button>
+        <button class="btn primaryColor" ng-click="buzzAds()">
+            Buzz Ads
+        </button>
+        <button class="btn primaryColor" ng-click="orders()">
+            Orders
+        </button>
+        <button class="btn primaryColor" ng-click="registeredUsers()">
+            Registered Users
+        </button>
+    </div>
+
+    <div class="groupContainer col-md-6 col-md-offset-3">
+        <div>
+            <input ng-model="searchText" placeholder="Search">
+            <input ng-model="age" placeholder="Age Filter" type="number" min="0" step="0.25">
+        </div>
+        <div ng-repeat="group in groups | filter: searchText | filter:ageFilter">
+            <div class="groupCard" ng-click="groupSelected(group)">
+                <div class="groupCardHeaderCover">
+                    <p class="groupCardHeader">{{group.type}}</p>
+                    <p class="groupCardSubHeader">{{group.minAge}} - {{group.maxAge}} months</p>
+                </div>
+                <div class="groupCardBody">
+                    <p class="groupCardText" ng-bind-html="group.text"></p>
+                </div>
+                <div class="groupCardFooter">
+                    <a class="groupCardUrl" href={{group.url}}>{{group.url}}</a>
+                    <div class="pull-right">
+                        <button ng-if="group.option1Text != undefined && group.option1Text != ''" class="btn secondaryColor" ng-bind-html="group.option1Text"></button>
+                        <button ng-if="group.option2Text != undefined && group.option2Text != ''" class="btn secondaryColor" ng-bind-html="group.option2Text"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div role="dialog" class="modal fade" id="addNewGroup" role="dialog" tabindex='-1'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="resetGroupForm()">&times;</button>
+                    <h4 class="modal-title horizontalCenter">Add New Group</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form>
+                            <div class="form-group">
+                                <div class="dropdown"> 
+                                    <button class="btn secondaryColor dropdown-toggle" type="button" data-toggle="dropdown" ng-click="disableSmiley()">{{type}}
+                                        <span class="caret pull-right"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="groupType in groupTypes" role="presentation"><a role="menuitem" tabindex="-1" ng-click="setGroupType(groupType)">{{groupType}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%"> 
+                                    <input trusted-html type="text" class="form-control" name="text" ng-model="text" ng-focus="enableSmiley('text')" required placeholder="Text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input type="text" class="form-control" name="url" ng-model="url" ng-focus="disableSmiley()" required placeholder="Url">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input type="number" class="form-control" name="minAge" min="0" step="0.25" ng-model="minAge" ng-focus="disableSmiley()" required placeholder="Minimum Age">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input type="number" class="form-control" name="maxAge" min="0" step="0.25" ng-model="maxAge" ng-focus="disableSmiley()" required placeholder="Maximum Age">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%"> 
+                                    <input trusted-html type="text" class="form-control" name="option1Text" ng-model="option1Text" ng-focus="enableSmiley('option1Text')" required placeholder="Option 1 Text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input trusted-html type="text" class="form-control" name="option2Text" ng-model="option2Text" ng-focus="enableSmiley('option2Text')" required placeholder="Option 2 Text">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div ng-show="smileyEnabled" style="max-height: 100px; overflow-y: scroll;">
+                        <div style="float: left; width: 30px;" ng-repeat="smiley in smileys">
+                            <div style="zoom: 2" ng-bind-html="smiley" ng-click="appendSmiley(smiley)"></div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn secondaryColor" data-dismiss="modal" ng-click="resetGroupForm()">Close</button>
+                    <button class="btn primaryColor pull-right" data-dismiss="modal" ng-click="addGroup()">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div role="dialog" class="modal fade" id="sendNotification" role="dialog" tabindex='-1'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="resetNotificationForm()">&times;</button>
+                    <h4 class="modal-title horizontalCenter">Send Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%"> 
+                                    <input trusted-html type="text" class="form-control" name="notificationText" ng-model="notificationText" ng-focus="enableSmiley('notificationText')" required placeholder="Text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input type="number" class="form-control" name="minAge" min="0" step="0.25" ng-model="notificationMinAge" ng-focus="disableSmiley()" required placeholder="Minimum Age">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-in" style="width:100%">
+                                    <input type="number" class="form-control" name="maxAge" min="0" step="0.25" ng-model="notificationMaxAge" ng-focus="disableSmiley()" required placeholder="Maximum Age">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div ng-show="smileyEnabled" style="max-height: 100px; overflow-y: scroll;">
+                        <div style="float: left; width: 30px;" ng-repeat="smiley in smileys">
+                            <div style="zoom: 2" ng-bind-html="smiley" ng-click="appendSmiley(smiley)"></div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn secondaryColor" data-dismiss="modal" ng-click="resetNotificationForm()">Close</button>
+                    <button class="btn primaryColor pull-right" data-dismiss="modal" ng-click="sendNotification()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

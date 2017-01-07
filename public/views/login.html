@@ -1,0 +1,28 @@
+<div ng-class="{true: 'col-sm-4 col-sm-offset-4 loginContainer animated shake', false: 'col-sm-4 col-sm-offset-4 loginContainer'}[loginError == true]">
+    <div class="logo">
+        <a href="/#/">
+            <img class="logo" src="../images/logo.jpg">
+        </a>
+    </div>
+    <form>
+        <div class="form-group">
+            <div class="input-group input-group-in roundedBorder" style= "width:100%">
+                <input style ="padding:5px; border-radius:20px" ng-model="username" type="text" class="form-control" name="username" required minlength="4" placeholder="Mobile Number, Email or Username" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group input-group-in" style= "width:100%">
+                <input style ="padding:5px; border-radius:20px;" ng-model="password" type="password" class="form-control" name="password" required minlength="4" placeholder="Password">
+            </div>
+        </div>
+        <div>
+            <a style="float:right" class="primaryColor" href="/#/forgotPassword">Forgot Password</a>
+        </div>
+        <div class="form-group form-actions" style="margin-top: 100px;">
+            <input style ="width:100%; border-radius:20px;" ng-click="submitLogin()" type="submit" class="btn primaryColorFill" value="Sign In">
+        </div>
+        <div style="text-align:center">
+            <p class="secondaryColor">Don't have an account? <a class="primaryColor" href="/#/signup">Sign Up</a></p>
+        </div>
+    </form>
+</div>
